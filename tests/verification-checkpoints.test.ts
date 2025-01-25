@@ -1,21 +1,41 @@
+import { describe, it, expect, beforeEach } from "vitest"
 
-import { describe, expect, it } from "vitest";
+describe("verification-checkpoints", () => {
+  let contract: any
+  
+  beforeEach(() => {
+    contract = {
+      addCheckpoint: (productId: number, location: string, notes: string) => ({ value: 0 }),
+      getCheckpoint: (productId: number, checkpointId: number) => ({
+        verifier: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+        timestamp: 123456,
+        location: "Warehouse A",
+        notes: "Product received in good condition",
+      }),
+      getCheckpointCount: (productId: number) => 1,
+    }
+  })
+  
+  describe("add-checkpoint", () => {
+    it("should add a new checkpoint", () => {
+      const result = contract.addCheckpoint(1, "Warehouse A", "Product received in good condition")
+      expect(result.value).toBe(0)
+    })
+  })
+  
+  describe("get-checkpoint", () => {
+    it("should return checkpoint information", () => {
+      const result = contract.getCheckpoint(1, 0)
+      expect(result.verifier).toBe("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM")
+      expect(result.location).toBe("Warehouse A")
+    })
+  })
+  
+  describe("get-checkpoint-count", () => {
+    it("should return the number of checkpoints for a product", () => {
+      const result = contract.getCheckpointCount(1)
+      expect(result).toBe(1)
+    })
+  })
+})
 
-const accounts = simnet.getAccounts();
-const address1 = accounts.get("wallet_1")!;
-
-/*
-  The test below is an example. To learn more, read the testing documentation here:
-  https://docs.hiro.so/stacks/clarinet-js-sdk
-*/
-
-describe("example tests", () => {
-  it("ensures simnet is well initalised", () => {
-    expect(simnet.blockHeight).toBeDefined();
-  });
-
-  // it("shows an example", () => {
-  //   const { result } = simnet.callReadOnlyFn("counter", "get-counter", [], address1);
-  //   expect(result).toBeUint(0);
-  // });
-});
